@@ -1,0 +1,47 @@
+name: Deploy and Run Script
+
+on:
+  workflow_dispatch:
+    inputs:
+      customMessage:
+        description: "Ejecucion manual del flujo"
+        required: false
+        default: "Ejecucion manual del flujo"
+      url:
+        description: "URL de la publicacion del puesto de trabajo a analizar"
+        required: true
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
+        pip install python-dotenv
+
+    - name: Run script
+      env:
+        CUENTA: ${{ secrets.CUENTA_CORREO }}
+        PASSWORD: ${{ secrets.PASSWORD_CUENTA }}
+        RECIPIENTS: ${{ secrets.RECIPIENTS }}
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        url: ${{ github.event.inputs.url }}
+
+      run: |
+        source venv/bin/activate
+        python main.py
