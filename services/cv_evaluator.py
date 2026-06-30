@@ -51,6 +51,4 @@ def evaluar_candidato(texto_cv: str, descripcion_puesto: str) -> AnalisisCV:
             fortalezas=["Requiere revisión manual del CV"],
             areas_mejora=["Verificar formato y legibilidad del PDF"],
             porcentaje_ajuste=0,
-            mejora_cv=["Error"]
-            
         )

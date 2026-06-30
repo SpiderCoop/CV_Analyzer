@@ -18,8 +18,7 @@ SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
     - Sé específico en tus observaciones
     - Considera tanto fortalezas como áreas de desarrollo
     - Proporciona evaluaciones realistas y justificadas
-    - Enfócate en la relevancia para el puesto específico
-    - Adicionalmente da recomendaciones de mejora para el cv"""
+    - Enfócate en la relevancia para el puesto específico"""
 )
 
 # Prompt de análisis - Instrucciones específicas para evaluar el CV
@@ -45,7 +44,6 @@ ANALISIS_PROMPT = HumanMessagePromptTemplate.from_template(
         - Habilidades técnicas (40% del peso)
         - Formación y certificaciones (15% del peso)
         - Coherencia profesional (10% del peso)
-    7. Identifica puntos de mejora del cv que puedan mejorar la candidatura
     
     Sé preciso, objetivo y constructivo en tu análisis en español."""
     )

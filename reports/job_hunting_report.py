@@ -156,12 +156,12 @@ def crear_reporte_oportunidad_laboral(resultado: AnalisisCV, vacante: PuestoTrab
                     </ol>
                 </td>
                 <td class="col-td">
-                    <h3 style="color: #e67e22;">💡 Cambios Sugeridos en tu CV:</h3>
+                    <h3 style="color: #e67e22;">💡 Sugerencias y areas de mejora:</h3>
                     <ol>
     """
 
-    if resultado.mejora_cv:
-        for rec in resultado.mejora_cv:
+    if resultado.areas_mejora:
+        for rec in resultado.areas_mejora:
             html += f"<li>{rec}</li>"
     else:
         html += "<li>No se requieren cambios críticos adicionales.</li>"
