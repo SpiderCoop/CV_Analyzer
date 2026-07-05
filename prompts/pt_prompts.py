@@ -14,13 +14,14 @@ SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
     - **empresa**: Nombre de la empresa que publica el puesto.
     - **puesto**: Título oficial de la vacante.
     - **nivel**: Nivel del puesto. Elige estrictamente entre: "entrada", "medio", "gerencial" o "dirección".
+    - **locacion**: Lugar de la vacante
+    - **modalidad**: Tipo de trabajo. Elige estrictamente entre: "Remoto", "Híbrido" o "Presencial".
     - **salario**: Un número entero con el salario (o `0` si no hay un número claro).
     - **beneficios**: Lista de strings con las prestaciones compartidas.
     - **descripcion**: Resumen de la descripción general.
     - **funciones**: Lista de strings con las responsabilidades del rol.
     - **requisitos_obligatorios**: Lista de strings con requisitos indispensables.
     - **requisitos_deseables**: Lista de strings con habilidades o conocimientos opcionales/plus.
-    - **modalidad**: Tipo de trabajo. Elige estrictamente entre: "Remoto", "Híbrido" o "Presencial".
     """)
 
 # Prompt de análisis - Instrucciones específicas para evaluar el CV

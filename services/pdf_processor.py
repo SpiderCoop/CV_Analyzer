@@ -1,7 +1,5 @@
 import fitz
 
-import fitz  # PyMuPDF
-
 def extraer_texto_pdf(archivo_o_ruta, num_pags: int | list = None):
     try:
         # CORRECCIÓN DE RUTA / MEMORIA: Detectar si es un objeto en memoria (bytes) o una ruta string

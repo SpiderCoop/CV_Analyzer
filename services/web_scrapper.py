@@ -67,7 +67,7 @@ def _extract_text_from_json_ld(soup: BeautifulSoup) -> str:
         texto = _normalize_text(parte)
         if texto and texto not in única:
             única.append(texto)
-    return '\n\n'.join(única)
+    return _normalize_text('\n\n'.join(única))
 
 
 def _extract_text_from_meta(soup: BeautifulSoup) -> str:
@@ -91,7 +91,7 @@ def _extract_text_from_meta(soup: BeautifulSoup) -> str:
     for parte in partes:
         if parte and parte not in única:
             única.append(parte)
-    return '\n\n'.join(única)
+    return _normalize_text('\n\n'.join(única))
 
 
 def _extract_text_from_itemprops(soup: BeautifulSoup) -> str:
@@ -110,7 +110,7 @@ def _extract_text_from_itemprops(soup: BeautifulSoup) -> str:
     for parte in partes:
         if parte and parte not in única:
             única.append(parte)
-    return '\n\n'.join(única)
+    return _normalize_text('\n\n'.join(única))
 
 
 def _extract_text_from_attributes(soup: BeautifulSoup) -> str:
@@ -126,7 +126,7 @@ def _extract_text_from_attributes(soup: BeautifulSoup) -> str:
     for parte in partes:
         if parte and parte not in única:
             única.append(parte)
-    return '\n\n'.join(única)
+    return _normalize_text('\n\n'.join(única))
 
 
 def _extract_visible_text(soup: BeautifulSoup) -> str:
@@ -149,26 +149,30 @@ def extraer_texto_url(url: str) -> str:
         respuesta.encoding = respuesta.apparent_encoding or 'utf-8'
         soup = BeautifulSoup(respuesta.text, 'html.parser')
 
-        partes: list[str] = []
-        for extractor in (
-            _extract_text_from_meta,
-            _extract_text_from_json_ld,
-            _extract_text_from_itemprops,
-            _extract_text_from_attributes,
-        ):
-            texto = extractor(soup)
-            if texto:
-                partes.append(texto)
+        # 1. Prioridad Máxima: El estándar de oro para vacantes
+        texto_json_ld = _extract_text_from_json_ld(soup)
+        if texto_json_ld:
+            return texto_json_ld  # Si ya tienes el JSON-LD, no necesitas el resto
+            
+        # 2. Segunda opción: Datos estructurados en etiquetas html
+        texto_itemprops = _extract_text_from_itemprops(soup)
+        if texto_itemprops:
+            return texto_itemprops
+        
+        # 3. Tercera opción: Datos estructurados en etiquetas html
+        texto_meta = _extract_text_from_meta(soup)
+        if texto_meta:
+            return texto_meta
 
+        # 4. Cuarta opción: Datos estructurados en atributos
+        texto_attributes = _extract_text_from_attributes(soup)
+        if texto_attributes:
+            return texto_attributes
+
+        # 5. Última opción: Caer en el texto plano (Scraping sucio)
         visible_soup = BeautifulSoup(respuesta.text, 'html.parser')
-        texto_visible = _extract_visible_text(visible_soup)
-        if texto_visible:
-            partes.append(texto_visible)
+        return _extract_visible_text(visible_soup)
 
-        if partes:
-            return _normalize_text('\n\n'.join(partes))
-
-        return "No se encontró texto extraíble en la página."
     except requests.RequestException as e:
         return f"Ocurrió un error de red: {e}"
     except Exception as e:

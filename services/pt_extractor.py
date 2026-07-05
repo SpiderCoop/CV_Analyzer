@@ -41,15 +41,4 @@ def extraer_pt(texto_pt: str) -> PuestoTrabajo:
         return resultado
     
     except Exception as e:
-        return PuestoTrabajo(
-            empresa = "Error",
-            puesto = "Error",
-            nivel = "Error",
-            salario = 0,
-            beneficios = ["Error"],
-            descripcion = "Error",
-            funciones = ["Error"],
-            requisitos_obligatorios = ["Error"],
-            requisitos_deseables = ["Error"],
-            modalidad = "Error",
-        )
+        return None
