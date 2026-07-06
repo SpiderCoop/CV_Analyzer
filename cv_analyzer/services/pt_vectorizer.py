@@ -6,12 +6,11 @@ Fecha:         2026-07-04
 import os
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_postgres import PGVector
+from cv_analyzer.services.config import *
 
-# Configurar credenciales
-os.environ["GOOGLE_API_KEY"] = "TU_API_KEY_AQUI"
 
 # 1. Instanciar el modelo de embeddings de Gemini
-embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004")
+embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004", api_key=GOOGLE_API_KEY)
 
 # 2. Tu base extensa de puestos de trabajo (Simulación de registros existentes)
 base_puestos = [
@@ -20,18 +19,6 @@ base_puestos = [
     "Cloud Data Engineer: Administración de bases de datos AWS RDS, ETL con Lambda, PostgreSQL y S3.",
     "Frontend Developer: Creación de interfaces de usuario, React, TypeScript, Tailwind CSS y Next.js."
 ]
-
-# --- CONFIGURACIÓN DE POSTGRESQL + PGVECTOR ---
-# Modifica estos datos con las credenciales de tu base de datos real
-USUARIO = "postgres"
-PASSWORD = "tu_password_aqui"
-HOST = "localhost"
-PORT = "5432"
-DB_NAME = "tu_base_datos"
-
-# Cadena de conexión usando el driver psycopg (v3)
-CONNECTION_STRING = f"postgresql+psycopg://{USUARIO}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
-COLLECTION_NAME = "puestos_trabajo"  # Nombre de la tabla/colección dentro de pgvector
 
 
 # 3. Crear el índice vectorial e insertar los datos en PostgreSQL

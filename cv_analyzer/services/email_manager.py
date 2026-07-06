@@ -4,17 +4,11 @@ Autor:         David Jiménez Cooper - SpiderCoop
 Fecha:         2026-06-29
 """
 
-import os
 from email_automation import EmailManager
-from dotenv import load_dotenv
+from cv_analyzer.services.config import *
 
 
-load_dotenv()
-cuenta = os.environ.get("CUENTA")
-password = os.environ.get("PASSWORD")
-
-
-email = EmailManager(cuenta, password, smtp_server="smtp.gmail.com")
+email = EmailManager(CUENTA, PASSWORD, smtp_server="smtp.gmail.com")
 
 
 

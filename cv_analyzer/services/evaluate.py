@@ -8,11 +8,11 @@ Fecha:         2026-06-29
 from tqdm import tqdm
 import pandas as pd
 
-from services.web_scrapper import extraer_texto_url
-from services.pdf_processor import extraer_texto_pdf
+from cv_analyzer.services.web_scrapper import extraer_texto_url
+from cv_analyzer.services.pdf_processor import extraer_texto_pdf
 
-from services.pt_extractor import extraer_pt
-from services.cv_evaluator import evaluar_candidato
+from cv_analyzer.services.pt_extractor import extraer_pt
+from cv_analyzer.services.cv_evaluator import evaluar_candidato
 
 from langchain_core.documents import Document
 

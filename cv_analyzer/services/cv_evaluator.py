@@ -6,8 +6,8 @@ Fecha:         2026-06-29
 
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
-from models.cv_model import AnalisisCV
-from prompts.cv_prompts import crear_cv_analysis_prompts
+from cv_analyzer.models.cv_model import AnalisisCV
+from cv_analyzer.prompts.cv_prompts import crear_cv_analysis_prompts
 
 from dotenv import load_dotenv
 load_dotenv()

@@ -1,6 +1,6 @@
 
-from models.cv_model import AnalisisCV
-from models.pt_model import PuestoTrabajo
+from cv_analyzer.models.cv_model import AnalisisCV
+from cv_analyzer.models.pt_model import PuestoTrabajo
 
 
 

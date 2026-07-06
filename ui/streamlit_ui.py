@@ -1,7 +1,7 @@
 import streamlit as st
-from models.cv_model import AnalisisCV
-from services.pdf_processor import extraer_texto_pdf
-from services.cv_evaluator import evaluar_candidato
+from cv_analyzer.models.cv_model import AnalisisCV
+from cv_analyzer.services.pdf_processor import extraer_texto_pdf
+from cv_analyzer.services.cv_evaluator import evaluar_candidato
 
 def main():
     """Función principal que define la interfaz de usuario de Streamlit"""

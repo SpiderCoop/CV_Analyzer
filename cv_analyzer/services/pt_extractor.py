@@ -6,8 +6,8 @@ Fecha:         2026-06-29
 
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
-from models.pt_model import PuestoTrabajo
-from prompts.pt_prompts import crear_extraccion_prompts
+from cv_analyzer.models.pt_model import PuestoTrabajo
+from cv_analyzer.prompts.pt_prompts import crear_extraccion_prompts
 
 from dotenv import load_dotenv
 load_dotenv()
