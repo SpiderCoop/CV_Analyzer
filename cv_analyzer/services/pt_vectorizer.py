@@ -3,14 +3,13 @@ Descripción:   Script para la vectorizacion de puesto de trabajo y almacenamien
 Autor:         David Jiménez Cooper - SpiderCoop
 Fecha:         2026-07-04
 """
-import os
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
 from langchain_postgres import PGVector
+
+from cv_analyzer.services.llm import embeddings
 from cv_analyzer.services.config import *
 
 
-# 1. Instanciar el modelo de embeddings de Gemini
-embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004", api_key=GOOGLE_API_KEY)
 
 # 2. Tu base extensa de puestos de trabajo (Simulación de registros existentes)
 base_puestos = [
