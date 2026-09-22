@@ -1,4 +1,14 @@
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
+"""
+Description:   Prompts especializados para el análisis de currículums vitae (CVs) en el contexto de selección de talento.
+Author:        David Jiménez Cooper - SpiderCoop
+Date:          2026-09-21
+"""
+
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+    SystemMessagePromptTemplate,
+)
 
 # Prompt del sistema - Define el rol y criterios del reclutador experto
 SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
@@ -18,7 +28,9 @@ SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
     - Sé específico en tus observaciones
     - Considera tanto fortalezas como áreas de desarrollo
     - Proporciona evaluaciones realistas y justificadas
-    - Enfócate en la relevancia para el puesto específico"""
+    - Enfócate en la relevancia para el puesto específico
+    - Considera el contexto del mercado laboral actual
+"""
 )
 
 # Prompt de análisis - Instrucciones específicas para evaluar el CV
@@ -46,13 +58,11 @@ ANALISIS_PROMPT = HumanMessagePromptTemplate.from_template(
         - Coherencia profesional (10% del peso)
     
     Sé preciso, objetivo y constructivo en tu análisis en español."""
-    )
+)
 
 # Prompt completo combinado - Listo para usar
-CHAT_PROMPT = ChatPromptTemplate.from_messages([
-    SISTEMA_PROMPT,
-    ANALISIS_PROMPT
-    ])
+CHAT_PROMPT = ChatPromptTemplate.from_messages([SISTEMA_PROMPT, ANALISIS_PROMPT])
+
 
 def crear_cv_analysis_prompts():
     """Crea el sistema de prompts especializado para análisis de CVs"""

@@ -1,31 +1,61 @@
+"""
+Description:   Genera un reporte de seguimiento de oportunidades laborales basado en el análisis del CV del candidato y la vacante correspondiente.
+Author:        David Jiménez Cooper - SpiderCoop
+Date:          2026-09-21
+"""
 
-from cv_analyzer.models.cv_model import AnalisisCV
+from cv_analyzer.models.analysis_model import AnalisisCV
 from cv_analyzer.models.pt_model import PuestoTrabajo
 
 
-def crear_reporte_oportunidad_laboral(resultado: AnalisisCV, vacante: PuestoTrabajo) -> str:
+def crear_reporte_oportunidad_laboral(
+    resultado: AnalisisCV, vacante: PuestoTrabajo
+) -> str:
     """
     Genera un cuerpo de correo enfocado en la vacante para el seguimiento de oportunidades.
     Muestra detalles exhaustivos del puesto y solo métricas clave de compatibilidad del candidato.
     """
     # 1. Lógica de Ajuste y Semáforo de Compatibilidad
     if resultado.porcentaje_ajuste >= 80:
-        color, nivel_adj, mensaje, metric_color = "🟢", "EXCELENTE OPCIÓN", "Alta probabilidad de éxito. ¡Postúlate!", "#28a745"
-        rec_style = "background-color: #d4edda; color: #155724; border-left: 5px solid #28a745;"
+        color, nivel_adj, mensaje, metric_color = (
+            "🟢",
+            "EXCELENTE OPCIÓN",
+            "Alta probabilidad de éxito. ¡Postúlate!",
+            "#28a745",
+        )
+        rec_style = (
+            "background-color: #d4edda; color: #155724; border-left: 5px solid #28a745;"
+        )
         rec_titulo = "🎯 ESTRATEGIA: POSTULACIÓN PRIORITARIA"
         rec_texto = "Tu perfil cubre los pilares del puesto. Ajusta los detalles sugeridos abajo y envía tu CV de inmediato."
     elif resultado.porcentaje_ajuste >= 60:
-        color, nivel_adj, mensaje, metric_color = "🟡", "BUENA OPCIÓN", "Compatible, requiere énfasis en tus fortalezas.", "#ffc107"
-        rec_style = "background-color: #fff3cd; color: #856404; border-left: 5px solid #ffc107;"
+        color, nivel_adj, mensaje, metric_color = (
+            "🟡",
+            "BUENA OPCIÓN",
+            "Compatible, requiere énfasis en tus fortalezas.",
+            "#ffc107",
+        )
+        rec_style = (
+            "background-color: #fff3cd; color: #856404; border-left: 5px solid #ffc107;"
+        )
         rec_titulo = "⚠️ ESTRATEGIA: ADAPTACIÓN DE CV"
         rec_texto = "Cuentas con la base necesaria. Es indispensable reestructurar tu CV para resaltar las tecnologías solicitadas antes de aplicar."
     else:
-        color, nivel_adj, mensaje, metric_color = "🔴", "COMPATIBILIDAD BAJA", "Brecha técnica alta o cambio de rumbo.", "#dc3545"
-        rec_style = "background-color: #f8d7da; color: #721c24; border-left: 5px solid #dc3545;"
+        color, nivel_adj, mensaje, metric_color = (
+            "🔴",
+            "COMPATIBILIDAD BAJA",
+            "Brecha técnica alta o cambio de rumbo.",
+            "#dc3545",
+        )
+        rec_style = (
+            "background-color: #f8d7da; color: #721c24; border-left: 5px solid #dc3545;"
+        )
         rec_titulo = "❌ ESTRATEGIA: EVALUAR DETENIDAMENTE"
         rec_texto = "El puesto demanda requisitos que no están visibles en tu perfil actual. Evalúa si vale la pena el esfuerzo de adaptación."
 
-    salario_texto = f"${vacante.salario:,}" if vacante.salario > 0 else "No especificado"
+    salario_texto = (
+        f"${vacante.salario:,}" if vacante.salario > 0 else "No especificado"
+    )
 
     # 2. Construcción del HTML
     html = f"""
@@ -90,7 +120,7 @@ def crear_reporte_oportunidad_laboral(resultado: AnalisisCV, vacante: PuestoTrab
     """
     for funcion in vacante.funciones:
         html += f"<li>{funcion}</li>"
-    
+
     html += """
         </ul>
 
@@ -106,7 +136,7 @@ def crear_reporte_oportunidad_laboral(resultado: AnalisisCV, vacante: PuestoTrab
     """
     for req in vacante.requisitos_obligatorios:
         html += f"<li>{req}</li>"
-    
+
     html += """
                     </ul>
                 </td>
@@ -116,7 +146,7 @@ def crear_reporte_oportunidad_laboral(resultado: AnalisisCV, vacante: PuestoTrab
     """
     for deseable in vacante.requisitos_deseables:
         html += f"<li>{deseable}</li>"
-        
+
     html += """
                     </ul>
                 </td>

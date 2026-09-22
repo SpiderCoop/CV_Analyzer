@@ -6,17 +6,15 @@ Fecha:         2026-07-04
 
 from langchain_postgres import PGVector
 
+from config import *
 from cv_analyzer.services.llm import embeddings
-from cv_analyzer.services.config import *
-
-
 
 # 2. Tu base extensa de puestos de trabajo (Simulación de registros existentes)
 base_puestos = [
     "Data Scientist: Modelos predictivos, Machine Learning, Python, SQL y desarrollo de pipelines RAG.",
     "Quantitative Analyst: Econometría, optimización de portafolios, valoración de derivados, Python y VBA.",
     "Cloud Data Engineer: Administración de bases de datos AWS RDS, ETL con Lambda, PostgreSQL y S3.",
-    "Frontend Developer: Creación de interfaces de usuario, React, TypeScript, Tailwind CSS y Next.js."
+    "Frontend Developer: Creación de interfaces de usuario, React, TypeScript, Tailwind CSS y Next.js.",
 ]
 
 
@@ -27,7 +25,7 @@ vector_store = PGVector.from_texts(
     embedding=embeddings,
     connection=CONNECTION_STRING,
     collection_name=COLLECTION_NAME,
-    use_jsonb=True # Guarda metadatos en formato JSONB de forma eficiente
+    use_jsonb=True,  # Guarda metadatos en formato JSONB de forma eficiente
 )
 
 # A PARTIR DE AQUÍ EL FLUJO DE PRODUCCIÓN ES IGUAL:

@@ -18,21 +18,20 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-        cache: 'pip'
+
+    - name: Instalar uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
 
     - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt
-        pip install python-dotenv
+      run: uv sync --locked --no-dev
 
     - name: Run script
       env:
@@ -40,8 +39,6 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD_CUENTA }}
         RECIPIENTS: ${{ secrets.RECIPIENTS }}
         GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        url: ${{ github.event.inputs.url }}
+        URL: ${{ github.event.inputs.url }}
 
-      run: |
-        source venv/bin/activate
-        python main.py
+      run: uv run src/main.py

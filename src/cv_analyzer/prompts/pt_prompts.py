@@ -1,4 +1,8 @@
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+    SystemMessagePromptTemplate,
+)
 
 # Prompt del sistema - Define el rol y criterios del reclutador experto
 SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
@@ -22,7 +26,8 @@ SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
     - **funciones**: Lista de strings con las responsabilidades del rol.
     - **requisitos_obligatorios**: Lista de strings con requisitos indispensables.
     - **requisitos_deseables**: Lista de strings con habilidades o conocimientos opcionales/plus.
-    """)
+    """
+)
 
 # Prompt de análisis - Instrucciones específicas para evaluar el CV
 EXTRACCION_PROMPT = HumanMessagePromptTemplate.from_template(
@@ -30,13 +35,11 @@ EXTRACCION_PROMPT = HumanMessagePromptTemplate.from_template(
     Texto de la vacante:
     {texto}
     """
-    )
+)
 
 # Prompt completo combinado - Listo para usar
-CHAT_PROMPT = ChatPromptTemplate.from_messages([
-    SISTEMA_PROMPT,
-    EXTRACCION_PROMPT
-    ])
+CHAT_PROMPT = ChatPromptTemplate.from_messages([SISTEMA_PROMPT, EXTRACCION_PROMPT])
+
 
 def crear_extraccion_prompts():
     """Crea el sistema de prompts especializado para extraccion de elementos de puestos de trabajo"""

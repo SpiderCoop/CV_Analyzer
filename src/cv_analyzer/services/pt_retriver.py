@@ -4,20 +4,16 @@ Autor:         David Jiménez Cooper - SpiderCoop
 Fecha:         2026-07-04
 """
 
-
-from langchain_postgres import PGVector
 from langchain_core.retrievers import MultiQueryRetriever
+from langchain_postgres import PGVector
 
+from config import *
 from cv_analyzer.services.llm import embeddings, llm_model
-from cv_analyzer.services.config import *
-
 
 # 3. Inicializar el Vector Store en modo "Solo Lectura / Consulta"
 # Al no usar .from_texts(), pgvector no inserta nada, solo se conecta a la tabla existente.
 vector_store = PGVector(
-    connection=CONNECTION_STRING,
-    collection_name=COLLECTION_NAME,
-    embeddings=embeddings
+    connection=CONNECTION_STRING, collection_name=COLLECTION_NAME, embeddings=embeddings
 )
 
 # Perfil o query de búsqueda (Puesto ideal del aplicante)
@@ -31,8 +27,8 @@ print("\n--- RECOVERY: USANDO EL RETRIEVER INTERFACE (LCEL) ---")
 # Este es el enfoque estándar si vas a conectar este proceso a un LLM o Agente.
 # Permite usar estrategias avanzadas como MMR (Maximal Marginal Relevance) para evitar resultados redundantes.
 base_retriever = vector_store.as_retriever(
-    search_type="similarity", # También puedes usar "mmr"
-    search_kwargs={"k": 2}
+    search_type="similarity",  # También puedes usar "mmr"
+    search_kwargs={"k": 2},
 )
 
 retriever = MultiQueryRetriever.from_llm(base_retriever, llm_model)

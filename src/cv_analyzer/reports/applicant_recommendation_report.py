@@ -1,40 +1,74 @@
+"""
+Description:   Genera un reporte de recomendación de contratación basado en el análisis del CV del candidato y la vacante correspondiente.
+Author:        David Jiménez Cooper - SpiderCoop
+Date:          2026-09-21
+"""
 
-from cv_analyzer.models.cv_model import AnalisisCV
+from cv_analyzer.models.analysis_model import AnalisisCV
 from cv_analyzer.models.pt_model import PuestoTrabajo
 
 
-
-def correo_recomendacion_contratacion(resultado: AnalisisCV, vacante: PuestoTrabajo) -> str:
+def correo_recomendacion_contratacion(
+    resultado: AnalisisCV, vacante: PuestoTrabajo
+) -> str:
     """
-    Genera el cuerpo del correo en HTML basado en los datos de la vacante 
+    Genera el cuerpo del correo en HTML basado en los datos de la vacante
     y el resultado de la evaluación del CV, incluyendo sugerencias de mejora.
     """
     # 1. Lógica de Evaluación Principal (Métricas y Colores del Candidato)
     if resultado.porcentaje_ajuste >= 80:
-        color, nivel_adj, mensaje, metric_color = "🟢", "EXCELENTE", "Candidato altamente recomendado", "#28a745"
+        color, nivel_adj, mensaje, metric_color = (
+            "🟢",
+            "EXCELENTE",
+            "Candidato altamente recomendado",
+            "#28a745",
+        )
     elif resultado.porcentaje_ajuste >= 60:
-        color, nivel_adj, mensaje, metric_color = "🟡", "BUENO", "Candidato recomendado con reservas", "#ffc107"
+        color, nivel_adj, mensaje, metric_color = (
+            "🟡",
+            "BUENO",
+            "Candidato recomendado con reservas",
+            "#ffc107",
+        )
     elif resultado.porcentaje_ajuste >= 40:
-        color, nivel_adj, mensaje, metric_color = "🟠", "REGULAR", "Candidato requiere evaluación adicional", "#fd7e14"
+        color, nivel_adj, mensaje, metric_color = (
+            "🟠",
+            "REGULAR",
+            "Candidato requiere evaluación adicional",
+            "#fd7e14",
+        )
     else:
-        color, nivel_adj, mensaje, metric_color = "🔴", "BAJO", "Candidato no recomendado", "#dc3545"
+        color, nivel_adj, mensaje, metric_color = (
+            "🔴",
+            "BAJO",
+            "Candidato no recomendado",
+            "#dc3545",
+        )
 
     # 2. Lógica de la Recomendación Final (Bloques de Alerta)
     if resultado.porcentaje_ajuste >= 70:
-        rec_style = "background-color: #d4edda; color: #155724; border-left: 5px solid #28a745;"
+        rec_style = (
+            "background-color: #d4edda; color: #155724; border-left: 5px solid #28a745;"
+        )
         rec_titulo = "✅ CANDIDATO RECOMENDADO"
         rec_texto = "El perfil del candidato está bien alineado con los requisitos del puesto. Se recomienda proceder con las siguientes etapas del proceso de selección."
     elif resultado.porcentaje_ajuste >= 50:
-        rec_style = "background-color: #fff3cd; color: #856404; border-left: 5px solid #ffc107;"
+        rec_style = (
+            "background-color: #fff3cd; color: #856404; border-left: 5px solid #ffc107;"
+        )
         rec_titulo = "⚠️ CANDIDATO CON POTENCIAL"
         rec_texto = "El candidato muestra potencial pero requiere evaluación adicional. Se recomienda una entrevista técnica para validar competencias específicas."
     else:
-        rec_style = "background-color: #f8d7da; color: #721c24; border-left: 5px solid #dc3545;"
+        rec_style = (
+            "background-color: #f8d7da; color: #721c24; border-left: 5px solid #dc3545;"
+        )
         rec_titulo = "❌ CANDIDATO NO RECOMENDADO"
         rec_texto = "El perfil no se alinea suficientemente con los requisitos del puesto. Se recomienda continuar la búsqueda de candidatos más adecuados."
 
     # Formateo del salario de la vacante
-    salario_texto = f"${vacante.salario:,}" if vacante.salario > 0 else "No especificado"
+    salario_texto = (
+        f"${vacante.salario:,}" if vacante.salario > 0 else "No especificado"
+    )
 
     # 3. Construcción del HTML
     html = f"""
@@ -104,7 +138,7 @@ def correo_recomendacion_contratacion(resultado: AnalisisCV, vacante: PuestoTrab
 
         <h3>💼 Experiencia Relevante del Candidato</h3>
         <div class="info-box" style="background-color: #f8f9fa; border-left: 4px solid #6c757d; color: #333;">
-            {resultado.experiencia_relevante.replace('\n', '<br>')}
+            {resultado.experiencia_relevante.replace("\n", "<br>")}
         </div>
 
         <div class="divider"></div>
@@ -126,7 +160,7 @@ def correo_recomendacion_contratacion(resultado: AnalisisCV, vacante: PuestoTrab
                 <td class="col-td">
                     <h2>💪 Fortalezas Principales</h2>
     """
-    
+
     if resultado.fortalezas:
         html += "<ol style='padding-left: 20px; margin-top:0;'>"
         for fortaleza in resultado.fortalezas:
@@ -140,7 +174,7 @@ def correo_recomendacion_contratacion(resultado: AnalisisCV, vacante: PuestoTrab
                 <td class="col-td">
                     <h2>📈 Áreas de Desarrollo</h2>
     """
-    
+
     if resultado.areas_mejora:
         html += "<ol style='padding-left: 20px; margin-top:0;'>"
         for area in resultado.areas_mejora:
@@ -168,8 +202,8 @@ def correo_recomendacion_contratacion(resultado: AnalisisCV, vacante: PuestoTrab
         <div class="divider"></div>
         <h2>💡 Sugerencias para Resaltar la Candidatura</h2>
     """
-    
-    if hasattr(resultado, 'recomendaciones') and resultado.recomendaciones:
+
+    if hasattr(resultado, "recomendaciones") and resultado.recomendaciones:
         html += "<ul style='padding-left: 20px; color: #444;'>"
         for recomendacion in resultado.recomendaciones:
             html += f"<li style='margin-bottom: 6px;'>{recomendacion}</li>"
