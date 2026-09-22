@@ -20,11 +20,11 @@ DEFAULT_HEADERS = {
 
 
 def _normalize_text(text: str) -> str:
-    text = text.replace('\r', ' ')
-    text = re.sub(r'\s+', ' ', text)
+    text = text.replace("\r", " ")
+    text = re.sub(r"\s+", " ", text)
     lines = [line.strip() for line in text.splitlines()]
     lines = [line for line in lines if line]
-    return '\n'.join(lines)
+    return "\n".join(lines)
 
 
 def _collect_text_from_json(value: Any, partes: list[str]) -> None:
@@ -42,7 +42,7 @@ def _collect_text_from_json(value: Any, partes: list[str]) -> None:
 
 def _extract_text_from_json_ld(soup: BeautifulSoup) -> str:
     partes: list[str] = []
-    for script in soup.find_all('script', type='application/ld+json'):
+    for script in soup.find_all("script", type="application/ld+json"):
         if not script.string:
             continue
 
@@ -50,7 +50,7 @@ def _extract_text_from_json_ld(soup: BeautifulSoup) -> str:
         try:
             payload = json.loads(payload_text)
         except json.JSONDecodeError:
-            match = re.search(r'({.*})', payload_text, re.S)
+            match = re.search(r"({.*})", payload_text, re.DOTALL)
             if not match:
                 continue
             try:
@@ -67,7 +67,7 @@ def _extract_text_from_json_ld(soup: BeautifulSoup) -> str:
         texto = _normalize_text(parte)
         if texto and texto not in única:
             única.append(texto)
-    return _normalize_text('\n\n'.join(única))
+    return _normalize_text("\n\n".join(única))
 
 
 def _extract_text_from_meta(soup: BeautifulSoup) -> str:
@@ -76,31 +76,33 @@ def _extract_text_from_meta(soup: BeautifulSoup) -> str:
         partes.append(soup.title.string.strip())
 
     propiedades = [
-        'og:title',
-        'og:description',
-        'twitter:title',
-        'twitter:description',
-        'description',
+        "og:title",
+        "og:description",
+        "twitter:title",
+        "twitter:description",
+        "description",
     ]
     for prop in propiedades:
-        meta = soup.find('meta', property=prop) or soup.find('meta', attrs={'name': prop})
-        if meta and meta.get('content'):
-            partes.append(meta['content'].strip())
+        meta = soup.find("meta", property=prop) or soup.find(
+            "meta", attrs={"name": prop}
+        )
+        if meta and meta.get("content"):
+            partes.append(meta["content"].strip())
 
     única = []
     for parte in partes:
         if parte and parte not in única:
             única.append(parte)
-    return _normalize_text('\n\n'.join(única))
+    return _normalize_text("\n\n".join(única))
 
 
 def _extract_text_from_itemprops(soup: BeautifulSoup) -> str:
     partes: list[str] = []
-    for tag in soup.find_all(attrs={'itemprop': True}):
-        texto = tag.get_text(separator=' ', strip=True)
+    for tag in soup.find_all(attrs={"itemprop": True}):
+        texto = tag.get_text(separator=" ", strip=True)
         if texto:
             partes.append(texto)
-        for attr in ('content', 'alt', 'title', 'aria-label', 'placeholder'):
+        for attr in ("content", "alt", "title", "aria-label", "placeholder"):
             if tag.has_attr(attr):
                 contenido = str(tag[attr]).strip()
                 if contenido:
@@ -110,13 +112,13 @@ def _extract_text_from_itemprops(soup: BeautifulSoup) -> str:
     for parte in partes:
         if parte and parte not in única:
             única.append(parte)
-    return _normalize_text('\n\n'.join(única))
+    return _normalize_text("\n\n".join(única))
 
 
 def _extract_text_from_attributes(soup: BeautifulSoup) -> str:
     partes: list[str] = []
     for tag in soup.find_all(attrs=True):
-        for attr in ('alt', 'title', 'aria-label', 'placeholder'):
+        for attr in ("alt", "title", "aria-label", "placeholder"):
             if tag.has_attr(attr):
                 contenido = str(tag[attr]).strip()
                 if contenido:
@@ -126,15 +128,15 @@ def _extract_text_from_attributes(soup: BeautifulSoup) -> str:
     for parte in partes:
         if parte and parte not in única:
             única.append(parte)
-    return _normalize_text('\n\n'.join(única))
+    return _normalize_text("\n\n".join(única))
 
 
 def _extract_visible_text(soup: BeautifulSoup) -> str:
-    for tag in soup(['script', 'style', 'iframe', 'svg', 'noscript']):
+    for tag in soup(["script", "style", "iframe", "svg", "noscript"]):
         tag.extract()
     for comment in soup.find_all(string=lambda texto: isinstance(texto, Comment)):
         comment.extract()
-    texto = soup.get_text(separator=' ')
+    texto = soup.get_text(separator=" ")
     return _normalize_text(texto)
 
 
@@ -146,19 +148,19 @@ def extraer_texto_url(url: str) -> str:
         if respuesta.status_code != 200:
             return f"Error al acceder a la página. Código de estado: {respuesta.status_code}"
 
-        respuesta.encoding = respuesta.apparent_encoding or 'utf-8'
-        soup = BeautifulSoup(respuesta.text, 'html.parser')
+        respuesta.encoding = respuesta.apparent_encoding or "utf-8"
+        soup = BeautifulSoup(respuesta.text, "html.parser")
 
         # 1. Prioridad Máxima: El estándar de oro para vacantes
         texto_json_ld = _extract_text_from_json_ld(soup)
         if texto_json_ld:
             return texto_json_ld  # Si ya tienes el JSON-LD, no necesitas el resto
-            
+
         # 2. Segunda opción: Datos estructurados en etiquetas html
         texto_itemprops = _extract_text_from_itemprops(soup)
         if texto_itemprops:
             return texto_itemprops
-        
+
         # 3. Tercera opción: Datos estructurados en etiquetas html
         texto_meta = _extract_text_from_meta(soup)
         if texto_meta:
@@ -170,7 +172,7 @@ def extraer_texto_url(url: str) -> str:
             return texto_attributes
 
         # 5. Última opción: Caer en el texto plano (Scraping sucio)
-        visible_soup = BeautifulSoup(respuesta.text, 'html.parser')
+        visible_soup = BeautifulSoup(respuesta.text, "html.parser")
         return _extract_visible_text(visible_soup)
 
     except requests.RequestException as e:
