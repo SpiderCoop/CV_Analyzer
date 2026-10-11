@@ -24,3 +24,6 @@ class AnalisisCV(BaseModel):
         ge=0,
         le=100,
     )
+    justificacion: str = Field(
+        description="Justificación detallada del porcentaje de ajuste al puesto basado en la experiencia, habilidades y formación del candidato."
+    )

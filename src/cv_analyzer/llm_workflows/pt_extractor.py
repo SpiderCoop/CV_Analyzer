@@ -7,6 +7,7 @@ Fecha:         2026-06-29
 from cv_analyzer.models.pt_model import PuestoTrabajo
 from cv_analyzer.prompts.pt_prompts import crear_extraccion_prompts
 from cv_analyzer.services.llm import llm_model
+from cv_analyzer.states.alignment_state import AlignmentState
 
 
 def crear_extractor_pt():
@@ -20,13 +21,16 @@ def crear_extractor_pt():
     return cadena
 
 
-def extraer_pt(texto_pt: str) -> PuestoTrabajo:
+def extraer_pt(state: AlignmentState) -> PuestoTrabajo:
+
+    texto_pt = state["texto_puesto"]
+
     try:
         cadena_evaluacion = crear_extractor_pt()
 
         resultado = cadena_evaluacion.invoke({"texto": texto_pt})
 
-        return resultado
+        return resultado.model_dump()
 
     except Exception as e:
         raise ValueError(f"Error al procesar la descripción del puesto: {e}") from e

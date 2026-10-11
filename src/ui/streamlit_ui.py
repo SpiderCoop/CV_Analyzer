@@ -1,7 +1,7 @@
 import streamlit as st
 
 from src.cv_analyzer.models.analysis_model import AnalisisCV
-from src.cv_analyzer.services.evaluation_service import evaluar
+from cv_analyzer.workflows.alignment_evaluation import evaluar
 from src.cv_analyzer.services.pdf_processor import extraer_texto_pdf
 
 

@@ -8,14 +8,15 @@ import pandas as pd
 from langchain_core.documents import Document
 from tqdm import tqdm
 
-from cv_analyzer.services.pdf_processor import extraer_texto_pdf
-from cv_analyzer.services.pt_extractor import extraer_pt
-from cv_analyzer.services.cv_extractor import extraer_cv
-from cv_analyzer.services.evaluator import evaluar_candidato
 from cv_analyzer.services.web_scrapper import extraer_texto_url
+from cv_analyzer.llm_workflows.pt_extractor import extraer_pt
+from cv_analyzer.services.pdf_processor import extraer_texto_pdf
+from cv_analyzer.llm_workflows.cv_extractor import extraer_cv
+from cv_analyzer.llm_workflows.evaluator import evaluar_candidato
 
 
-def evaluar(url: str, cv_path: str):
+
+def evaluar_alineacion(url: str, cv_path: str):
 
     with tqdm(total=4, desc="Evaluando candidato", unit="paso") as pbar:
 
@@ -53,4 +54,4 @@ def evaluar(url: str, cv_path: str):
         evaluacion = evaluar_candidato(texto_cv_json, texto_pt_json)
         pbar.update(1)
 
-    return texto_cv, texto_pt, evaluacion
+    return url, texto_cv, texto_pt, evaluacion

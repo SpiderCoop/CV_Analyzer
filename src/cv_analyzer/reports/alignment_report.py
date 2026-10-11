@@ -1,18 +1,16 @@
 """
-Description:   Genera un reporte de seguimiento de oportunidades laborales basado en el análisis del CV del candidato y la vacante correspondiente.
+Description:   Genera un reporte de seguimiento de oportunidades laborales basado en el análisis del CV del candidato y la resultado correspondiente.
 Author:        David Jiménez Cooper - SpiderCoop
 Date:          2026-09-21
 """
 
-from cv_analyzer.models.analysis_model import AnalisisCV
-from cv_analyzer.models.pt_model import PuestoTrabajo
-
+from cv_analyzer.states.alignment_state import AlignmentState
 
 def crear_reporte_oportunidad_laboral(
-    resultado: AnalisisCV, vacante: PuestoTrabajo
+    resultado: AlignmentState
 ) -> str:
     """
-    Genera un cuerpo de correo enfocado en la vacante para el seguimiento de oportunidades.
+    Genera un cuerpo de correo enfocado en la resultado para el seguimiento de oportunidades.
     Muestra detalles exhaustivos del puesto y solo métricas clave de compatibilidad del candidato.
     """
     # 1. Lógica de Ajuste y Semáforo de Compatibilidad
@@ -39,7 +37,7 @@ def crear_reporte_oportunidad_laboral(
             "background-color: #fff3cd; color: #856404; border-left: 5px solid #ffc107;"
         )
         rec_titulo = "⚠️ ESTRATEGIA: ADAPTACIÓN DE CV"
-        rec_texto = "Cuentas con la base necesaria. Es indispensable reestructurar tu CV para resaltar las tecnologías solicitadas antes de aplicar."
+        rec_texto = "Cuentas con la base necesaria. Es indispensable reestructurar tu CV para resaltar las habilidades solicitadas antes de aplicar."
     else:
         color, nivel_adj, mensaje, metric_color = (
             "🔴",
@@ -54,7 +52,7 @@ def crear_reporte_oportunidad_laboral(
         rec_texto = "El puesto demanda requisitos que no están visibles en tu perfil actual. Evalúa si vale la pena el esfuerzo de adaptación."
 
     salario_texto = (
-        f"${vacante.salario:,}" if vacante.salario > 0 else "No especificado"
+        f"${resultado.salario_puesto:,}" if resultado.salario_puesto > 0 else "No especificado"
     )
 
     # 2. Construcción del HTML
@@ -69,19 +67,20 @@ def crear_reporte_oportunidad_laboral(
             li {{ margin-bottom: 4px; }}
             .divider {{ border: 0; height: 1px; background: #e6e9ef; margin: 20px 0; }}
             .metric-box {{ text-align: center; background-color: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e6e9ef; margin-bottom: 20px; }}
-            .vacante-box {{ background-color: #f4f6f9; border-left: 4px solid #1d80dc; padding: 12px; margin-bottom: 10px; border-radius: 4px; font-size: 14px; }}
+            .resultado-box {{ background-color: #f4f6f9; border-left: 4px solid #1d80dc; padding: 12px; margin-bottom: 10px; border-radius: 4px; font-size: 14px; }}
             .alert-box {{ padding: 15px; border-radius: 4px; margin-top: 15px; font-weight: bold; font-size: 14px; }}
             .col-table {{ width: 100%; border-collapse: collapse; }}
             .col-td {{ width: 50%; vertical-align: top; padding-right: 10px; }}
         </style>
     </head>
     <body>
-        <h1>🔍 Análisis de Oportunidad: {vacante.puesto}</h1>
-        <p>Reporte de viabilidad generado para evaluar la posición en <b>{vacante.empresa}</b>.</p>
+        <h1>🔍 Análisis de Oportunidad: {resultado.puesto}</h1>
+        <p>Reporte de viabilidad generado para evaluar la posición en <b>{resultado.empresa}</b>.</p>
+        <p>Enlace a la vacante: <a href="{resultado.puesto_url}">{resultado.puesto_url}</a></p>
         
         <!-- ================= COMPATIBILIDAD COYUNTURAL ================= -->
         <div class="metric-box">
-            <span style="font-size: 12px; color: #666; text-transform: uppercase; font-weight: bold;">Tu Ajuste con la Vacante</span>
+            <span style="font-size: 12px; color: #666; text-transform: uppercase; font-weight: bold;">Tu Ajuste con la resultado</span>
             <div style="font-size: 38px; font-weight: bold; color: {metric_color}; margin: 2px 0;">{resultado.porcentaje_ajuste}%</div>
             <div style="font-size: 15px; font-weight: bold;">{color} {nivel_adj}</div>
             <p style="margin: 3px 0 0 0; color: #666; font-size: 13px;">{mensaje}</p>
@@ -95,30 +94,30 @@ def crear_reporte_oportunidad_laboral(
         <div class="divider"></div>
 
         <!-- ================= DETALLES DEL PUESTO ================= -->
-        <h2>📌 Datos Clave de la Vacante</h2>
+        <h2>📌 Datos Clave de la resultado</h2>
         <table class="col-table">
             <tr>
                 <td class="col-td">
-                    <div class="vacante-box"><b>🏢 Empresa:</b> {vacante.empresa}</div>
-                    <div class="vacante-box"><b>🌍 Modalidad:</b> {vacante.modalidad}</div>
+                    <div class="resultado-box"><b>🏢 Empresa:</b> {resultado.empresa}</div>
+                    <div class="resultado-box"><b>🌍 Modalidad:</b> {resultado.modalidad_puesto}</div>
                 </td>
                 <td class="col-td">
-                    <div class="vacante-box"><b>📈 Nivel:</b> {vacante.nivel.capitalize()}</div>
-                    <div class="vacante-box"><b>💰 Salario Ofrecido:</b> {salario_texto}</div>
+                    <div class="resultado-box"><b>📈 Nivel:</b> {resultado.nivel_puesto.capitalize()}</div>
+                    <div class="resultado-box"><b>💰 Salario Ofrecido:</b> {salario_texto}</div>
                 </td>
             </tr>
         </table>
 
         <h3>📝 Descripción de la Oferta:</h3>
         <p style="font-size: 14px; background-color: #fafafa; padding: 12px; border: 1px solid #eee; border-radius: 4px; margin-top:5px;">
-            {vacante.descripcion}
+            {resultado.descripcion_puesto}
         </p>
 
         <!-- Funciones y Responsabilidades -->
         <h3>🎯 Funciones Principales del Rol:</h3>
         <ul>
     """
-    for funcion in vacante.funciones:
+    for funcion in resultado.funciones_puesto:
         html += f"<li>{funcion}</li>"
 
     html += """
@@ -134,7 +133,7 @@ def crear_reporte_oportunidad_laboral(
                     <h3 style="color: #c92a2a;">🔴 Obligatorios:</h3>
                     <ul>
     """
-    for req in vacante.requisitos_obligatorios:
+    for req in resultado.requisitos_obligatorios:
         html += f"<li>{req}</li>"
 
     html += """
@@ -144,7 +143,7 @@ def crear_reporte_oportunidad_laboral(
                     <h3 style="color: #2b8a3e;">🟢 Deseables / Plus:</h3>
                     <ul>
     """
-    for deseable in vacante.requisitos_deseables:
+    for deseable in resultado.requisitos_deseables:
         html += f"<li>{deseable}</li>"
 
     html += """
@@ -157,8 +156,8 @@ def crear_reporte_oportunidad_laboral(
         <h3>🎁 Beneficios y Prestaciones:</h3>
         <ul>
     """
-    if vacante.beneficios:
-        for beneficio in vacante.beneficios:
+    if resultado.beneficios:
+        for beneficio in resultado.beneficios:
             html += f"<li>{beneficio}</li>"
     else:
         html += "<li>No especificados en la publicación.</li>"

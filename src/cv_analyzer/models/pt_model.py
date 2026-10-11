@@ -8,21 +8,21 @@ class PuestoTrabajo(BaseModel):
         description="Nombre de la empresa que publica el puesto de trabajo"
     )
     puesto: str = Field(description="Nombre o titulo del puesto de trabajo")
-    nivel: str = Field(
+    nivel_puesto: str = Field(
         description="Nivel del puesto de trabajo (entrada, medio, gerencial o dirección)"
     )
-    locacion: str = Field(
+    locacion_puesto: str = Field(
         description="País, estado donde se encuentra el puesto de trabajo"
     )
-    modalidad: str = Field(
+    modalidad_puesto: str = Field(
         description="modalidad del puesto de trabajo (Remoto, Híbrido o Presencial)"
     )
-    salario: int = Field(
+    salario_puesto: int = Field(
         description="Salario (si se menciona)",
     )
     beneficios: list[str] = Field(description="Lista de beneficios y/o prestaciones")
-    descripcion: str = Field(description="Descripcion general del puesto de trabajo")
-    funciones: list[str] = Field(
+    descripcion_puesto: str = Field(description="Descripcion general del puesto de trabajo")
+    funciones_puesto: list[str] = Field(
         description="Lista de funciones y responsabilidades del puesto de trabajo"
     )
     requisitos_obligatorios: list[str] = Field(

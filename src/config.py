@@ -19,13 +19,13 @@ EMBEDDINGS_MODEL = os.getenv(
 
 
 # --- CONFIGURACIÓN DE CORREO ---
-CUENTA = os.environ.get("CUENTA")
-PASSWORD = os.environ.get("PASSWORD")
-RECIPIENTS = os.environ.get("RECIPIENTS")
+CUENTA = os.getenv("CUENTA")
+PASSWORD = os.getenv("PASSWORD")
+RECIPIENTS = os.getenv("RECIPIENTS")
 
 
 # --- CONFIGURACIÓN RUTAS ---
-URL = os.environ.get("URL")
+URL = os.getenv("URL")
 CV_PATH = "data/CV David Jimenez Cooper 2026 En.pdf"
 
 

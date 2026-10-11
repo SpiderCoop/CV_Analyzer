@@ -41,6 +41,6 @@ EXTRACCION_PROMPT = HumanMessagePromptTemplate.from_template(
 CHAT_PROMPT = ChatPromptTemplate.from_messages([SISTEMA_PROMPT, EXTRACCION_PROMPT])
 
 
-def crear_extraccion_prompts():
+def crear_pt_extraccion_prompts():
     """Crea el sistema de prompts especializado para extraccion de elementos de puestos de trabajo"""
     return CHAT_PROMPT
