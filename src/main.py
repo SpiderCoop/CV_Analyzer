@@ -5,7 +5,7 @@ Fecha:         2026-06-29
 """
 
 from cv_analyzer.services.pdf_processor import extraer_texto_pdf
-from cv_analyzer.states.alignment_state import compiled_alignment_graph
+from cv_analyzer.states.alignment_graph import compiled_alignment_graph
 from cv_analyzer.reports.alignment_report import crear_reporte_oportunidad_laboral
 from cv_analyzer.services.email_manager import email
 
