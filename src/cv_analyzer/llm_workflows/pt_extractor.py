@@ -5,7 +5,7 @@ Fecha:         2026-06-29
 """
 
 from cv_analyzer.models.pt_model import PuestoTrabajo
-from cv_analyzer.prompts.pt_prompts import crear_extraccion_prompts
+from cv_analyzer.prompts.pt_prompts import crear_pt_extraccion_prompts
 from cv_analyzer.services.llm import llm_model
 from cv_analyzer.states.alignment_state import AlignmentState
 
@@ -15,7 +15,7 @@ def crear_extractor_pt():
     modelo_base = llm_model
 
     modelo_estructurado = modelo_base.with_structured_output(PuestoTrabajo)
-    chat_prompt = crear_extraccion_prompts()
+    chat_prompt = crear_pt_extraccion_prompts()
     cadena = chat_prompt | modelo_estructurado
 
     return cadena
