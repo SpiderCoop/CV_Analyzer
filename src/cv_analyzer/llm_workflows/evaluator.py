@@ -23,13 +23,11 @@ def crear_evaluador_cv():
 
 def evaluar_candidato(state: AlignmentState) -> AnalisisCV:
 
-    estado = state.model_dump()
-
     try:
         cadena_evaluacion = crear_evaluador_cv()
 
         resultado = cadena_evaluacion.invoke(
-            {"estado": estado}
+            {"estado": state}
         )
 
         return resultado.model_dump()
