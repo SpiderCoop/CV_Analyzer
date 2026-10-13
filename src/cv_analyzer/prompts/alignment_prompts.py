@@ -40,8 +40,28 @@ ANALISIS_PROMPT = HumanMessagePromptTemplate.from_template(
     Proporciona un análisis detallado, objetivo y profesional. 
 
 
-    **Estado global que incluye la descripción del puesto y la informacion del candidato:**
-    {estado}
+    **Campos pertinentes del puesto de trabajo:**
+    nombre del puesto: {puesto}
+    empresa: {empresa}
+    nivel del puesto: {nivel_puesto}
+    locación del puesto: {locacion_puesto}
+    modalidad del puesto: {modalidad_puesto}
+    salario del puesto: {salario_puesto}
+    beneficios: {beneficios}
+    descripción del puesto: {descripcion_puesto}
+    funciones del puesto: {funciones_puesto}
+    requisitos obligatorios: {requisitos_obligatorios}
+    requisitos deseables: {requisitos_deseables}
+
+    **Campos pertinentes del candidato:**
+    nombre del candidato: {nombre_candidato}
+    locación del candidato: {locacion_candidato}
+    experiencia del candidato: {experiencia_candidato}
+    años de experiencia: {experiencia_años}
+    educación del candidato: {educacion_candidato}
+    habilidades técnicas: {habilidades_tecnicas}
+    habilidades adicionales: {habilidades_adicionales}
+
 
     **INSTRUCCIONES ESPECÍFICAS:**
     1. Identifica habilidades técnicas relevantes para este puesto específico
@@ -58,9 +78,6 @@ ANALISIS_PROMPT = HumanMessagePromptTemplate.from_template(
 )
 
 # Prompt completo combinado - Listo para usar
-CHAT_PROMPT = ChatPromptTemplate.from_messages([SISTEMA_PROMPT, ANALISIS_PROMPT])
-
-
-def crear_alignment_analysis_prompts():
-    """Crea el sistema de prompts especializado para análisis de CVs"""
-    return CHAT_PROMPT
+ALIGNMENT_ANALYSIS_CHAT_PROMPT = ChatPromptTemplate.from_messages(
+    [SISTEMA_PROMPT, ANALISIS_PROMPT]
+)
