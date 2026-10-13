@@ -6,14 +6,13 @@ Date:          2026-10-10
 
 from typing import TypedDict
 
-
 # Definimos el esquema del estado
 
-class AlignmentState(TypedDict):
 
+class AlignmentState(TypedDict):
     # Información básica del puesto de trabajo
     puesto_url: str
-    texto_puesto:str
+    texto_puesto: str
     puesto: str
     empresa: str
     nivel_puesto: str
