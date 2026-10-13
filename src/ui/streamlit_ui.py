@@ -1,8 +1,8 @@
 import streamlit as st
 
-from src.cv_analyzer.models.analysis_model import AnalisisCV
-from cv_analyzer.workflows.alignment_evaluation import evaluar
 from src.cv_analyzer.services.pdf_processor import extraer_texto_pdf
+from src.cv_analyzer.states.alignment_graph import alignment_graph
+from src.cv_analyzer.states.graph_executioner import execute_graph
 
 
 def main():
@@ -144,10 +144,15 @@ def procesar_analisis(archivo_cv, descripcion_puesto):
         status_text.text("📄 Extrayendo texto del PDF...")
         progress_bar.progress(25)
 
-        texto_cv = extraer_texto_pdf(archivo_cv)
+        # Creamos el estado inicial
+        estado_inicial = {
+            "puesto_url": "",
+            "texto_puesto": descripcion_puesto,
+            "texto_cv": extraer_texto_pdf(archivo_cv),
+        }
 
-        if texto_cv.startswith("Error"):
-            st.error(f"❌ {texto_cv}")
+        if estado_inicial["texto_cv"].startswith("Error"):
+            st.error(f"❌ {estado_inicial['texto_cv']}")
             return
 
         status_text.text("🤖 Preparando análisis con IA...")
@@ -156,7 +161,7 @@ def procesar_analisis(archivo_cv, descripcion_puesto):
         status_text.text("📊 Analizando candidato...")
         progress_bar.progress(75)
 
-        texto_cv, texto_pt, resultado = evaluar(url="", cv_path=archivo_cv)
+        resultado = execute_graph(alignment_graph, estado_inicial)
 
         status_text.text("✅ Análisis completado")
         progress_bar.progress(100)
@@ -164,10 +169,10 @@ def procesar_analisis(archivo_cv, descripcion_puesto):
         progress_bar.empty()
         status_text.empty()
 
-        mostrar_resultados(resultado)
+        mostrar_resultados(resultado, estado_inicial["texto_cv"])
 
 
-def mostrar_resultados(resultado: AnalisisCV, texto_cv):
+def mostrar_resultados(resultado, texto_cv: str):
     """Muestra los resultados del análisis de manera estructurada y profesional"""
 
     st.subheader("🎯 Evaluación Principal")
@@ -189,7 +194,7 @@ def mostrar_resultados(resultado: AnalisisCV, texto_cv):
         nivel = "BAJO"
         mensaje = "Candidato no recomendado"
 
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, _col3 = st.columns([1, 2, 1])
     with col2:
         st.metric(
             label="Porcentaje de Ajuste al Puesto",
@@ -204,7 +209,7 @@ def mostrar_resultados(resultado: AnalisisCV, texto_cv):
 
     col1, col2 = st.columns(2)
     with col1:
-        st.info(f"**👨‍💼 Nombre:** {texto_cv.nombre_candidato}")
+        st.info(f"**👨‍💼 Nombre:** {texto_cv.get('nombre_candidato', 'Desconocido')}")
         st.info(f"**⏱️ Experiencia:** {resultado.experiencia_años} años")
 
     with col2:
@@ -271,7 +276,7 @@ def mostrar_resultados(resultado: AnalisisCV, texto_cv):
         """)
 
     st.markdown("---")
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, _col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("💾 Guardar Análisis", use_container_width=True):
             st.info("Funcionalidad de guardado - En desarrollo")
