@@ -42,9 +42,6 @@ EXTRACCION_PROMPT = HumanMessagePromptTemplate.from_template(
 )
 
 # Prompt completo combinado - Listo para usar
-CHAT_PROMPT = ChatPromptTemplate.from_messages([SISTEMA_PROMPT, EXTRACCION_PROMPT])
-
-
-def crear_cv_extraccion_prompts():
-    """Crea el sistema de prompts especializado para extraccion de información de CVs"""
-    return CHAT_PROMPT
+EXTRACCION_CV_CHAT_PROMPT = ChatPromptTemplate.from_messages(
+    [SISTEMA_PROMPT, EXTRACCION_PROMPT]
+)

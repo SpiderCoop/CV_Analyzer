@@ -5,27 +5,37 @@ class Curriculo(BaseModel):
     """Modelo de datos para el análisis completo y general de un CV."""
 
     nombre_candidato: str = Field(
-        description="Nombre completo del candidato extraído del CV."
+        default="No especificado",
+        description="Nombre completo del candidato extraído del CV.",
     )
     email_candidato: str = Field(
-        description="Correo electrónico del candidato extraído del CV."
+        default="No especificado",
+        description="Correo electrónico del candidato extraído del CV.",
     )
     telefono_candidato: str = Field(
-        description="Número de teléfono del candidato extraído del CV."
+        default="No especificado",
+        description="Número de teléfono del candidato extraído del CV.",
     )
-    experiencia_años: int = Field(
-        description="Años totales de experiencia laboral."
+    # Para enteros, es mejor usar Optional para que devuelva None o 0 si no lo encuentra
+    experiencia_años: int | None = Field(
+        default=0, description="Años totales de experiencia laboral."
     )
     educacion_candidato: str = Field(
-        description="Nivel educativo más alto y especialización principal."
+        default="No especificada",
+        description="Nivel educativo más alto y especialización principal.",
     )
-    locacion_candidato: str = Field(description="Lugar de residencia del candidato.")
+    locacion_candidato: str = Field(
+        default="No especificada", description="Lugar de residencia del candidato."
+    )
     experiencia_candidato: str = Field(
-        description="Resumen conciso de la experiencia laboral del candidato, enfocado en los últimos dos puestos o 10 años de experiencia."
+        default="Sin experiencia detallada",
+        description="Resumen conciso de la experiencia laboral del candidato, enfocado en los últimos dos puestos o 10 años de experiencia.",
     )
     habilidades_tecnicas: list[str] = Field(
-        description="Lista de 5-10 habilidades tecnicas del candidato."
+        default_factory=list,
+        description="Lista de 5-10 habilidades tecnicas del candidato.",
     )
     habilidades_adicionales: list[str] = Field(
-        description="Lista de 3-5 habilidades adicionales del candidato basadas en su perfil."
+        default_factory=list,
+        description="Lista de 3-5 habilidades adicionales del candidato basadas en su perfil.",
     )
