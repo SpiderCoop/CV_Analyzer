@@ -140,9 +140,7 @@ def _extract_visible_text(soup: BeautifulSoup) -> str:
     return _normalize_text(texto)
 
 
-def extraer_texto_url(state) -> str:
-
-    url = state["puesto_url"]
+def extraer_texto_url(url: str) -> str:
 
     try:
         session = requests.Session()
@@ -157,29 +155,29 @@ def extraer_texto_url(state) -> str:
         # 1. Prioridad Máxima: El estándar de oro para vacantes
         texto = _extract_text_from_json_ld(soup)
         if texto:
-            return {"texto_puesto": texto}
+            return texto
 
         # 2. Segunda opción: Datos estructurados en etiquetas html
         texto = _extract_text_from_itemprops(soup)
         if texto:
-            return {"texto_puesto": texto}
+            return texto
 
         # 3. Tercera opción: Datos estructurados en etiquetas html
         texto = _extract_text_from_meta(soup)
         if texto:
-            return {"texto_puesto": texto}
+            return texto
 
         # 4. Cuarta opción: Datos estructurados en atributos
         texto = _extract_text_from_attributes(soup)
         if texto:
-            return {"texto_puesto": texto}
+            return texto
 
         # 5. Última opción: Caer en el texto plano (Scraping sucio)
         visible_soup = BeautifulSoup(respuesta.text, "html.parser")
         texto = _extract_visible_text(visible_soup)
-        return {"texto_puesto": texto}
+        return texto
 
     except requests.RequestException as e:
-        return {"texto_puesto": f"Ocurrió un error de red: {e}"}
+        return f"Ocurrió un error de red: {e}"
     except Exception as e:
-        return {"texto_puesto": f"Ocurrió un error: {e}"}
+        raise ValueError(f"Ocurrió un error: {e}") from e
