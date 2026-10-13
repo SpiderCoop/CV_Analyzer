@@ -6,15 +6,14 @@ Date:          2026-09-21
 
 from cv_analyzer.states.alignment_state import AlignmentState
 
-def crear_reporte_oportunidad_laboral(
-    resultado: AlignmentState
-) -> str:
+
+def crear_reporte_oportunidad_laboral(resultado: AlignmentState) -> str:
     """
     Genera un cuerpo de correo enfocado en la resultado para el seguimiento de oportunidades.
     Muestra detalles exhaustivos del puesto y solo métricas clave de compatibilidad del candidato.
     """
     # 1. Lógica de Ajuste y Semáforo de Compatibilidad
-    if resultado.porcentaje_ajuste >= 80:
+    if resultado.get("porcentaje_ajuste") >= 80:
         color, nivel_adj, mensaje, metric_color = (
             "🟢",
             "EXCELENTE OPCIÓN",
@@ -26,7 +25,7 @@ def crear_reporte_oportunidad_laboral(
         )
         rec_titulo = "🎯 ESTRATEGIA: POSTULACIÓN PRIORITARIA"
         rec_texto = "Tu perfil cubre los pilares del puesto. Ajusta los detalles sugeridos abajo y envía tu CV de inmediato."
-    elif resultado.porcentaje_ajuste >= 60:
+    elif resultado.get("porcentaje_ajuste") >= 60:
         color, nivel_adj, mensaje, metric_color = (
             "🟡",
             "BUENA OPCIÓN",
@@ -52,7 +51,9 @@ def crear_reporte_oportunidad_laboral(
         rec_texto = "El puesto demanda requisitos que no están visibles en tu perfil actual. Evalúa si vale la pena el esfuerzo de adaptación."
 
     salario_texto = (
-        f"${resultado.salario_puesto:,}" if resultado.salario_puesto > 0 else "No especificado"
+        f"${resultado.get('salario_puesto'):,}"
+        if resultado.get("salario_puesto") > 0
+        else "No especificado"
     )
 
     # 2. Construcción del HTML
@@ -74,14 +75,14 @@ def crear_reporte_oportunidad_laboral(
         </style>
     </head>
     <body>
-        <h1>🔍 Análisis de Oportunidad: {resultado.puesto}</h1>
-        <p>Reporte de viabilidad generado para evaluar la posición en <b>{resultado.empresa}</b>.</p>
-        <p>Enlace a la vacante: <a href="{resultado.puesto_url}">{resultado.puesto_url}</a></p>
+        <h1>🔍 Análisis de Oportunidad: {resultado.get("puesto")}</h1>
+        <p>Reporte de viabilidad generado para evaluar la posición en <b>{resultado.get("empresa")}</b>.</p>
+        <p>Enlace a la vacante: <a href="{resultado.get("puesto_url")}">{resultado.get("puesto_url")}</a></p>
         
         <!-- ================= COMPATIBILIDAD COYUNTURAL ================= -->
         <div class="metric-box">
             <span style="font-size: 12px; color: #666; text-transform: uppercase; font-weight: bold;">Tu Ajuste con la resultado</span>
-            <div style="font-size: 38px; font-weight: bold; color: {metric_color}; margin: 2px 0;">{resultado.porcentaje_ajuste}%</div>
+            <div style="font-size: 38px; font-weight: bold; color: {metric_color}; margin: 2px 0;">{resultado.get("porcentaje_ajuste")}%</div>
             <div style="font-size: 15px; font-weight: bold;">{color} {nivel_adj}</div>
             <p style="margin: 3px 0 0 0; color: #666; font-size: 13px;">{mensaje}</p>
         </div>
@@ -91,6 +92,11 @@ def crear_reporte_oportunidad_laboral(
             <span style="font-weight: normal;">{rec_texto}</span>
         </div>
 
+       <h3>📝 Justificación de la evaluación:</h3>
+        <p style="font-size: 14px; background-color: #fafafa; padding: 12px; border: 1px solid #eee; border-radius: 4px; margin-top:5px;">
+            {resultado.get("justificacion")}
+        </p>
+
         <div class="divider"></div>
 
         <!-- ================= DETALLES DEL PUESTO ================= -->
@@ -98,11 +104,11 @@ def crear_reporte_oportunidad_laboral(
         <table class="col-table">
             <tr>
                 <td class="col-td">
-                    <div class="resultado-box"><b>🏢 Empresa:</b> {resultado.empresa}</div>
-                    <div class="resultado-box"><b>🌍 Modalidad:</b> {resultado.modalidad_puesto}</div>
+                    <div class="resultado-box"><b>🏢 Empresa:</b> {resultado.get("empresa")}</div>
+                    <div class="resultado-box"><b>🌍 Modalidad:</b> {resultado.get("modalidad_puesto")}</div>
                 </td>
                 <td class="col-td">
-                    <div class="resultado-box"><b>📈 Nivel:</b> {resultado.nivel_puesto.capitalize()}</div>
+                    <div class="resultado-box"><b>📈 Nivel:</b> {resultado.get("nivel_puesto").capitalize()}</div>
                     <div class="resultado-box"><b>💰 Salario Ofrecido:</b> {salario_texto}</div>
                 </td>
             </tr>
@@ -110,14 +116,14 @@ def crear_reporte_oportunidad_laboral(
 
         <h3>📝 Descripción de la Oferta:</h3>
         <p style="font-size: 14px; background-color: #fafafa; padding: 12px; border: 1px solid #eee; border-radius: 4px; margin-top:5px;">
-            {resultado.descripcion_puesto}
+            {resultado.get("descripcion_puesto")}
         </p>
 
         <!-- Funciones y Responsabilidades -->
         <h3>🎯 Funciones Principales del Rol:</h3>
         <ul>
     """
-    for funcion in resultado.funciones_puesto:
+    for funcion in resultado.get("funciones_puesto"):
         html += f"<li>{funcion}</li>"
 
     html += """
@@ -133,7 +139,7 @@ def crear_reporte_oportunidad_laboral(
                     <h3 style="color: #c92a2a;">🔴 Obligatorios:</h3>
                     <ul>
     """
-    for req in resultado.requisitos_obligatorios:
+    for req in resultado.get("requisitos_obligatorios"):
         html += f"<li>{req}</li>"
 
     html += """
@@ -143,7 +149,7 @@ def crear_reporte_oportunidad_laboral(
                     <h3 style="color: #2b8a3e;">🟢 Deseables / Plus:</h3>
                     <ul>
     """
-    for deseable in resultado.requisitos_deseables:
+    for deseable in resultado.get("requisitos_deseables"):
         html += f"<li>{deseable}</li>"
 
     html += """
@@ -156,8 +162,8 @@ def crear_reporte_oportunidad_laboral(
         <h3>🎁 Beneficios y Prestaciones:</h3>
         <ul>
     """
-    if resultado.beneficios:
-        for beneficio in resultado.beneficios:
+    if resultado.get("beneficios"):
+        for beneficio in resultado.get("beneficios"):
             html += f"<li>{beneficio}</li>"
     else:
         html += "<li>No especificados en la publicación.</li>"
@@ -175,8 +181,8 @@ def crear_reporte_oportunidad_laboral(
                     <h3 style="color: #1d80dc;">💪 Tus Fortalezas para este Rol:</h3>
                     <ol>
     """
-    if resultado.fortalezas:
-        for fortaleza in resultado.fortalezas:
+    if resultado.get("fortalezas"):
+        for fortaleza in resultado.get("fortalezas"):
             html += f"<li>{fortaleza}</li>"
     else:
         html += "<li>Sin fortalezas claras detectadas en el texto actual.</li>"
@@ -189,8 +195,8 @@ def crear_reporte_oportunidad_laboral(
                     <ol>
     """
 
-    if resultado.areas_mejora:
-        for rec in resultado.areas_mejora:
+    if resultado.get("areas_mejora"):
+        for rec in resultado.get("areas_mejora"):
             html += f"<li>{rec}</li>"
     else:
         html += "<li>No se requieren cambios críticos adicionales.</li>"
