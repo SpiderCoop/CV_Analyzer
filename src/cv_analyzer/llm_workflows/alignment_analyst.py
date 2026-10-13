@@ -5,7 +5,7 @@ Fecha:         2026-06-29
 """
 
 from cv_analyzer.llm_workflows.base_workflow import create_llm_chain
-from cv_analyzer.models.analysis_model import AlignmentAnalysis
+from cv_analyzer.models.alignment_model import AlignmentAnalysis
 from cv_analyzer.prompts.alignment_prompts import ALIGNMENT_ANALYSIS_CHAT_PROMPT
 from cv_analyzer.services.llm import llm_model
 from cv_analyzer.states.alignment_state import AlignmentState

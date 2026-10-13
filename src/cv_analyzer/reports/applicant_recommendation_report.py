@@ -4,12 +4,12 @@ Author:        David Jiménez Cooper - SpiderCoop
 Date:          2026-09-21
 """
 
-from cv_analyzer.models.analysis_model import AnalisisCV
+from cv_analyzer.models.alignment_model import AlignmentAnalysis
 from cv_analyzer.models.pt_model import PuestoTrabajo
 
 
 def correo_recomendacion_contratacion(
-    resultado: AnalisisCV, vacante: PuestoTrabajo
+    resultado: AlignmentAnalysis, vacante: PuestoTrabajo
 ) -> str:
     """
     Genera el cuerpo del correo en HTML basado en los datos de la vacante
