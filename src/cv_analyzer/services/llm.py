@@ -9,7 +9,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from config import EMBEDDINGS_MODEL, GOOGLE_API_KEY, LLM_MODEL
 
 llm_model = ChatGoogleGenerativeAI(
-    model=LLM_MODEL, temperature=0.2, api_key=GOOGLE_API_KEY
+    model=LLM_MODEL,
+    temperature=0.2,
+    api_key=GOOGLE_API_KEY,
+    timeout=120,
 )
 
 embeddings = GoogleGenerativeAIEmbeddings(
