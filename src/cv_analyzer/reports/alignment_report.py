@@ -77,7 +77,7 @@ def crear_reporte_oportunidad_laboral(resultado: AlignmentState) -> str:
     <body>
         <h1>🔍 Análisis de Oportunidad: {resultado.get("puesto")}</h1>
         <p>Reporte de viabilidad generado para evaluar la posición en <b>{resultado.get("empresa")}</b>.</p>
-        <p>Enlace a la vacante: <a href="{resultado.get("puesto_url")}">{resultado.get("puesto_url")}</a></p>
+        <p>Enlace a la vacante: <a href="{resultado.get("puesto_url")}">{resultado.get("puesto")}</a></p>
         
         <!-- ================= COMPATIBILIDAD COYUNTURAL ================= -->
         <div class="metric-box">
