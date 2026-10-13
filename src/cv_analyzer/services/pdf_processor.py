@@ -7,7 +7,7 @@ Date:          2026-09-21
 import pymupdf as pdf
 
 
-def extraer_texto_pdf(archivo_o_ruta, num_pags: int | list = None):
+def extraer_texto_pdf(archivo_o_ruta, num_pags: int | list | None = None):
     try:
         # CORRECCIÓN DE RUTA / MEMORIA: Detectar si es un objeto en memoria (bytes) o una ruta string
         if hasattr(archivo_o_ruta, "read"):
@@ -54,4 +54,4 @@ def extraer_texto_pdf(archivo_o_ruta, num_pags: int | list = None):
         return text
 
     except Exception as e:
-        return f"Error al procesar el archivo PDF con fitz: {e!s}"
+        raise ValueError(f"Error al procesar el archivo PDF con fitz: {e!s}") from e

@@ -141,6 +141,7 @@ def _extract_visible_text(soup: BeautifulSoup) -> str:
 
 
 def extraer_texto_url(url: str) -> str:
+
     try:
         session = requests.Session()
         session.headers.update(DEFAULT_HEADERS)
@@ -152,36 +153,31 @@ def extraer_texto_url(url: str) -> str:
         soup = BeautifulSoup(respuesta.text, "html.parser")
 
         # 1. Prioridad Máxima: El estándar de oro para vacantes
-        texto_json_ld = _extract_text_from_json_ld(soup)
-        if texto_json_ld:
-            return texto_json_ld  # Si ya tienes el JSON-LD, no necesitas el resto
+        texto = _extract_text_from_json_ld(soup)
+        if texto:
+            return texto
 
         # 2. Segunda opción: Datos estructurados en etiquetas html
-        texto_itemprops = _extract_text_from_itemprops(soup)
-        if texto_itemprops:
-            return texto_itemprops
+        texto = _extract_text_from_itemprops(soup)
+        if texto:
+            return texto
 
         # 3. Tercera opción: Datos estructurados en etiquetas html
-        texto_meta = _extract_text_from_meta(soup)
-        if texto_meta:
-            return texto_meta
+        texto = _extract_text_from_meta(soup)
+        if texto:
+            return texto
 
         # 4. Cuarta opción: Datos estructurados en atributos
-        texto_attributes = _extract_text_from_attributes(soup)
-        if texto_attributes:
-            return texto_attributes
+        texto = _extract_text_from_attributes(soup)
+        if texto:
+            return texto
 
         # 5. Última opción: Caer en el texto plano (Scraping sucio)
         visible_soup = BeautifulSoup(respuesta.text, "html.parser")
-        return _extract_visible_text(visible_soup)
+        texto = _extract_visible_text(visible_soup)
+        return texto
 
     except requests.RequestException as e:
         return f"Ocurrió un error de red: {e}"
     except Exception as e:
-        return f"Ocurrió un error: {e}"
-
-
-if __name__ == "__main__":
-    url_objetivo = "https://example.com"
-    resultado = extraer_texto_url(url_objetivo)
-    print(resultado)
+        raise ValueError(f"Ocurrió un error: {e}") from e

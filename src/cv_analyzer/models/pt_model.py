@@ -5,27 +5,42 @@ class PuestoTrabajo(BaseModel):
     """Modelo de datos para extraccion de elementos del puesto de trabajo."""
 
     empresa: str = Field(
-        description="Nombre de la empresa que publica el puesto de trabajo"
+        default="No especificada",
+        description="Nombre de la empresa que publica el puesto de trabajo",
     )
-    puesto: str = Field(description="Nombre o titulo del puesto de trabajo")
-    nivel: str = Field(
-        description="Nivel del puesto de trabajo (entrada, medio, gerencial o dirección)"
+    puesto: str = Field(
+        default="No especificado", description="Nombre o titulo del puesto de trabajo"
     )
-    locacion: str = Field(
-        description="País, estado donde se encuentra el puesto de trabajo"
+    nivel_puesto: str = Field(
+        default="No especificado",
+        description="Nivel del puesto de trabajo (entrada, medio, gerencial o dirección)",
     )
-    modalidad: str = Field(
-        description="modalidad del puesto de trabajo (Remoto, Híbrido o Presencial)"
+    locacion_puesto: str = Field(
+        default="No especificada",
+        description="País, estado donde se encuentra el puesto de trabajo",
     )
-    salario: int = Field(
-        description="Salario (si se menciona)",
+    modalidad_puesto: str = Field(
+        default="No especificada",
+        description="modalidad del puesto de trabajo (Remoto, Híbrido o Presencial)",
     )
-    beneficios: list[str] = Field(description="Lista de beneficios y/o prestaciones")
-    descripcion: str = Field(description="Descripcion general del puesto de trabajo")
-    funciones: list[str] = Field(
-        description="Lista de funciones y responsabilidades del puesto de trabajo"
+    salario_puesto: int | None = Field(
+        default=0,
+        description="Salario (si se menciona). Devuelve 0 si no se menciona.",
+    )
+    beneficios: list[str] = Field(
+        default_factory=list, description="Lista de beneficios y/o prestaciones"
+    )
+    descripcion_puesto: str = Field(
+        default="No especificada",
+        description="Descripcion general del puesto de trabajo",
+    )
+    funciones_puesto: list[str] = Field(
+        default_factory=list,
+        description="Lista de funciones y responsabilidades del puesto de trabajo",
     )
     requisitos_obligatorios: list[str] = Field(
-        description="Lista de requisitos obligatorios solicitados"
+        default_factory=list, description="Lista de requisitos obligatorios solicitados"
     )
-    requisitos_deseables: list[str] = Field(description="Lista de requisitos deseables")
+    requisitos_deseables: list[str] = Field(
+        default_factory=list, description="Lista de requisitos deseables"
+    )

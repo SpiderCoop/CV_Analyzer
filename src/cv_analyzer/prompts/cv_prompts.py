@@ -16,20 +16,20 @@ SISTEMA_PROMPT = SystemMessagePromptTemplate.from_template(
     Tu especialidad es analizar currículums y extraer la información clave de los candidatos de manera objetiva, profesional y constructiva.
     
     ### INSTRUCCIONES DE PROCESAMIENTO:
-    1. **Filtra el ruido:** Ignora menús, textos legales o avisos de privacidad del sitio web.
-    2. **Cero Alucinaciones:** Si un campo de texto no se menciona, coloca "No especificado". Si una lista no tiene elementos, devuelve una lista vacía `[]`.
-    3. **Restricción de años de experiencia:** El campo "experiencia_años" debe ser estrictamente un número entero. Si no se menciona un número exacto de años de experiencia o no se puede inferir uno, debes colocar `0`.
-    4. **Formato Estricto:** Devuelve la información exclusivamente en formato JSON estructurado que coincida con los siguientes campos.
+    1. **Cero Alucinaciones:** Si un campo de texto no se menciona, coloca "No especificado". Si una lista no tiene elementos, devuelve una lista vacía `[]`.
+    2. **Restricción de años de experiencia:** El campo "experiencia_años" debe ser estrictamente un número entero. Si no se menciona un número exacto de años de experiencia o no se puede inferir uno, debes colocar `0`.
+    3. **Formato Estricto:** Devuelve la información exclusivamente en formato JSON estructurado que coincida con los siguientes campos.
 
     ### CAMPOS A EXTRAER:
     - **nombre_candidato**: Nombre completo del candidato extraído del CV.
+    - **email**: Dirección de correo electrónico del candidato.
+    - **telefono**: Número de teléfono del candidato.
     - **experiencia_años**: Años totales de experiencia laboral relevante para el puesto.
     - **educacion**: Nivel educativo más alto del candidato. Elige estrictamente entre: "educación básica", "educación media", "educación superior" o "postgrado".
-    - **locacion**: Lugar de residencia del candidato.
+    - **locacion_candidato**: Lugar de residencia del candidato.
     - **experiencia**: Resumen conciso de la experiencia laboral del candidato, enfocado en los últimos dos puestos o 10 años de experiencia.
     - **habilidades_tecnicas**: Una lista de las habilidades técnicas más relevantes del candidato.
     - **habilidades_adicionales**: Una lista de habilidades adicionales del candidato basadas en su perfil.
-    - **areas_mejora**: Lista de áreas donde el candidato podría desarrollarse o mejorar.
 """
 )
 
@@ -42,9 +42,6 @@ EXTRACCION_PROMPT = HumanMessagePromptTemplate.from_template(
 )
 
 # Prompt completo combinado - Listo para usar
-CHAT_PROMPT = ChatPromptTemplate.from_messages([SISTEMA_PROMPT, EXTRACCION_PROMPT])
-
-
-def crear_cv_analysis_prompts():
-    """Crea el sistema de prompts especializado para extraccion de información de CVs"""
-    return CHAT_PROMPT
+EXTRACCION_CV_CHAT_PROMPT = ChatPromptTemplate.from_messages(
+    [SISTEMA_PROMPT, EXTRACCION_PROMPT]
+)
